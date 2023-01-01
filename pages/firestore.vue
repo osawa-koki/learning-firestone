@@ -107,7 +107,8 @@ export default defineComponent({
   },
   methods: {
     async Read() {
-      this.reading = true;
+      try {
+        this.reading = true;
       const messages_collection = collection(db, 'messages');
       const messages_docs = await getDocs(messages_collection);
       const message_doc = messages_docs.docs.map(doc => {
@@ -126,14 +127,18 @@ export default defineComponent({
       });
       this.messages = [evil_man, ...message_doc as Message[]];
       this.reading = false;
+      } catch (error) {
+        this.ErrorDialogMessage = 'メッセージの読み込みに失敗しました。';
+      }
     },
     async Insert() {
-      if (this.name === '') {
-        this.InsertError = '名前を入力してください';
+      try {
+        if (this.name === '') {
+        this.InsertError = '名前を入力してください。';
         return;
       }
       if (this.text === '') {
-        this.InsertError = '内容を入力してください';
+        this.InsertError = '内容を入力してください。';
         return;
       }
       this.InsertError = null;
@@ -150,6 +155,9 @@ export default defineComponent({
       await setDoc(doc(db, "messages", randomString), message);
       this.messages.unshift(message);
       this.sending = false;
+      } catch (error) {
+        this.SetErrorDialog('メッセージの送信に失敗しました。');
+      }
     },
     // eslint-disable-next-line require-await
     async Delete(id: string) {
@@ -158,7 +166,7 @@ export default defineComponent({
         await deleteDoc(doc(db, "messages", id));
         this.messages = this.messages.filter(message => message.id !== id);
       } catch (error) {
-        this.SetErrorDialog('削除に失敗しました。');
+        this.SetErrorDialog('メッセージの削除に失敗しました。');
       } finally {
         this.deleting = false;
       }
