@@ -86,8 +86,8 @@ export default defineComponent({
       text: 'Hello Firestore 💓',
       messages: [{
         id: '',
-        name: 'osawa-koki',
-        text: 'hello-world',
+        name: 'evil man',
+        text: 'You never delete me hehehe... 😈😈😈',
         date: new Date(),
       }] as Message[],
     }
