@@ -72,6 +72,13 @@ type Message = {
   date: Date;
 };
 
+const evil_man = {
+  id: '',
+  name: 'evil man',
+  text: 'You never delete me hehehe... 😈😈😈',
+  date: new Date(),
+};
+
 export default defineComponent({
   name: 'FirestorePage',
   data() {
@@ -84,12 +91,7 @@ export default defineComponent({
       pages,
       name: 'osawa-koki',
       text: 'Hello Firestore 💓',
-      messages: [{
-        id: '',
-        name: 'evil man',
-        text: 'You never delete me hehehe... 😈😈😈',
-        date: new Date(),
-      }] as Message[],
+      messages: [evil_man] as Message[],
     }
   },
   computed: {
@@ -122,7 +124,7 @@ export default defineComponent({
         if (a.date > b.date) return -1;
         return 0;
       });
-      this.messages = message_doc as Message[];
+      this.messages = [evil_man, ...message_doc as Message[]];
       this.reading = false;
     },
     async Insert() {
