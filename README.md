@@ -2,6 +2,8 @@
 
 Cloud Firestoreの学習用プロジェクト。  
 
+![成果物](./.development/img/fruit.webp)  
+
 ## 環境情報
 
 | モジュール | バージョン |
