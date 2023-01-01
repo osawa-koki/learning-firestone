@@ -12,6 +12,10 @@ const pages = [
     path: '/contact',
     name: 'contact',
   },
+  {
+    path: '/firestore',
+    name: 'firestore',
+  },
 ];
 
 export default pages;
