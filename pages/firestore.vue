@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/require-v-for-key -->
 <template>
   <div>
     <HeaderDiv />
@@ -27,21 +28,26 @@
         <div class="center box">
           <button v-if="reading === false" type="button" class="btn btn-outline-info" @click="Read">Read 💫💫💫</button>
           <button v-else type="button" class="btn btn-outline-info" disabled>
-            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>&nbsp;Rending
+            <span class="spinner-border spinner-border-sm text-primary" role="status"></span>&nbsp;Reading
           </button>
         </div>
         <div id="Messages">
           <template v-for="message in messages">
-          <!-- eslint-disable-next-line vue/require-v-for-key -->
           <div class="name">{{ message.name }}</div>
-          <!-- eslint-disable-next-line vue/require-v-for-key -->
           <div class="text">{{ message.text }}</div>
-          <!-- eslint-disable-next-line vue/require-v-for-key -->
           <div class="date">{{ Date2String(message.date) }}</div>
+          <button v-if="deleting === false" type="button" class="btn btn-danger" @click="() => {Delete(message.id)}">Delete</button>
+          <button v-else type="button" class="btn btn-danger" disabled>
+            <span class="spinner-border spinner-border-sm text-danger" role="status"></span>
+          </button>
         </template>
         </div>
       </div>
     </main>
+    <div id="ErrorDialog" class="alert alert-danger" role="alert" :class="ErrorDialogMessage !== null ? '' : 'hidden'">
+      <span>{{ ErrorDialogMessage }}</span>
+      <button type="button" class="btn-close" aria-label="Close" @click="() => {ErrorDialogMessage = null}"></button>
+    </div>
     <FooterDiv />
   </div>
 </template>
@@ -49,7 +55,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, setDoc } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore/lite';
 
 import firebaseConfig from '~/firebaseConfig';
 
@@ -71,8 +77,10 @@ export default defineComponent({
   data() {
     return {
       InsertError: null as string | null,
+      ErrorDialogMessage: null as string | null,
       sending : false,
       reading : false,
+      deleting : false,
       pages,
       name: 'osawa-koki',
       text: 'Hello Firestore 💓',
@@ -126,19 +134,39 @@ export default defineComponent({
         this.InsertError = '内容を入力してください';
         return;
       }
-      this.text = '';
       this.InsertError = null;
       const randomString = Math.random().toString(32).substring(2);
       this.sending = true;
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      await setDoc(doc(db, "messages", randomString), {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      const message = {
         id: randomString,
         name: this.name,
         text: this.text,
         date: new Date(),
-      });
+      };
+      this.text = '';
+      await setDoc(doc(db, "messages", randomString), message);
+      this.messages.unshift(message);
       this.sending = false;
-    }
+    },
+    // eslint-disable-next-line require-await
+    async Delete(id: string) {
+      try {
+        this.deleting = true;
+        await deleteDoc(doc(db, "messages", id));
+        this.messages = this.messages.filter(message => message.id !== id);
+      } catch (error) {
+        this.SetErrorDialog('削除に失敗しました。');
+      } finally {
+        this.deleting = false;
+      }
+    },
+    SetErrorDialog(error: string) {
+      this.ErrorDialogMessage = error;
+      setTimeout(() => {
+        this.ErrorDialogMessage = null;
+      }, 3000);
+    },
   },
 })
 </script>
@@ -147,16 +175,40 @@ export default defineComponent({
 #Messages {
   margin-top: 1rem;
   display: grid;
-  grid-template-columns: 2fr 5fr 2fr;
+  grid-template-columns: 2fr 5fr 2fr 1fr;
   gap: 0.5rem;
-  div {
+  * {
     border: 1px solid rgb(245, 245, 245);
     padding: 0.5rem;
+    margin: 0;
   }
   .date {
     font-size: 0.5rem;
     display: flex;
     align-items: center;
+  }
+}
+#ErrorDialog {
+  $height: 100px;
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  width: 300px;
+  height: $height;
+  z-index: 100;
+  margin: 0;
+  transition: all 1s;
+  button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    margin: 0;
+  }
+  &.hidden {
+    bottom: -#{$height};
   }
 }
 </style>
