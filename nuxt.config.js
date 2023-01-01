@@ -1,5 +1,5 @@
-const PROJECT_NAME = 'simple-nuxt-study.ssg.ts';
-const PRODUCTION_BASE_PATH = `/${PROJECT_NAME}/`;
+const PROJECT_NAME = 'learning-firestore';
+const PRODUCTION_BASE_PATH = `/`;
 
 export default {
   // Target: https://go.nuxtjs.dev/config-target
