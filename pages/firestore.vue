@@ -6,7 +6,7 @@
       <h2>👍 Cloud Firestoreを使ってみる 👍</h2>
       <div id="InsertContent">
         <div>
-          <label for="name" class="form-label">Email your name</label>
+          <label for="name" class="form-label">Enter your name</label>
           <input id="name" v-model="name" type="text" class="form-control" placeholder="osawa-koki" />
         </div>
         <div>
