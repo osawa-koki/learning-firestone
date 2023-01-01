@@ -3,7 +3,7 @@
     <HeaderDiv />
     <main>
       <div class="Central">
-        <h1>Hello Nuxt.js 💓💓💓</h1>
+        <h1>Hello Cloud Firestore 💓💓💓</h1>
         <img :src="$router.options.base + 'favicon.ico'" alt="" />
         <ul id="Contents">
           <li v-for="page in pages" :key="page.name">
