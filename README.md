@@ -2,6 +2,13 @@
 
 Cloud Firestoreの学習用プロジェクト。  
 
+## 環境情報
+
+| モジュール | バージョン |
+| ---- | ---- |
+| Windows | 11 Home |
+| Firebase CLI | 11.19.0 |
+
 ## 説明イロイロ
 
 1. <https://console.firebase.google.com/u/0/?hl=ja>からプロジェクトを作成。
